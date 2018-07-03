@@ -1,0 +1,36 @@
+해당하는 callback의 설명은 cmd에서 진행이 되며, cmd에서 node ~.js를 입력을 하게 되면, 실행이 되는 파일을 cmd에서 직접적으로
+node만 입력을 하면 cmd에서 명령을 칠 수가 있다.
+
+> console.log(1+1);
+2
+> a = [3,1,2]; a.sort(); console.log(a); => 해당하는 sort()로 인해서 정렬이 된 출력값이 나온다.
+[ 1, 2, 3 ]
+> a = [3,1,2]; function b(v1, v2){return v2-v1}; a.sort(b); console.log(a);
+        => b라는 함수를 만들면서 해줘야 하는 규칙은 매개변수의 개수가 2개여야하며, return값으로 0, 양수, 음수가 와야한다.
+        => sort()에 b를 넣음으로써, 해당하는 정렬은 전혀 다른 방법이 된다.
+[ 3, 2, 1 ]
+> a = [3,1,2]; function b(v1, v2){return v1-v2}; a.sort(b); console.log(a);
+        => v1-v2의 값은 반대가 되었다.
+[ 1, 2, 3 ]
+> a = [3,1,2]; function b(v1, v2){return 0}; a.sort(b); console.log(a); => return 0은 정렬이 되지 않았다.
+[ 3, 1, 2 ]
+> a = [3,1,2]; function b(v1, v2){console.log('c', v1, v2); return 0}; a.sort(b); console.log(a);
+c 3 1
+c 1 2
+    => 해당하는 방법으로 b가 2번 호출이 되었다는걸 알 수 있다. v1과 v2에 들어가는 값을 볼 수 있다.
+[ 3, 1, 2 ]
+
+==> 해당하는 방법에서 sort(b)의 동작방법은 그렇게 크게 중요한 것이 아니다. 우리가 중요시 봐야할 점은 sort()라는 함수에 b함수를
+우리가 정의를 해서 sort()에 영향을 주었다는 것이다. 여기서 b를 callback함수라 한다. 우리는 callback함수를 정의를 했고,
+누군가에게 호출을 당할 함수인 것이다. 여기서 누군가는 sort()이다.
+
+> a = [3,1,2]; a.sort(function(v1, v2){return v2-v1;}); console.log(a);
+[ 3, 2, 1 ]
+=>여기서 함수의 이름을 줘가면서 따로 정의를 하지 않고, 바로 sort에 넣을 수 가 있는데, 그걸 바로 익명함수라 한다.
+
+
+> function sort(callback){callback()};
+해당하는 방식은 sort의 기본적인 동작 구조를 살펴본 것이다. (정렬기능은 제외)
+> sort(function(){console.log('Hello Callback')});
+Hello Callback
+동작은 이와같이 한다.
