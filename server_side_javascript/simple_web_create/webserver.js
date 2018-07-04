@@ -6,10 +6,10 @@ const hostname = '127.0.0.1';
 const port = 1337;
 //해당하는 port와 hostname을 전달
 
-http.createServer((req, res) => { //해당하는 server를 만든다.
+http.createServer((req, res) => { //해당하는 server를 만든다. (req, res) => 이 코드가 function(req, res)와 동일한 코드이다.
  res.writeHead(200, { 'Content-Type': 'text/plain' });
  res.end('Hello World\n');
-}).listen(port, hostname, () => { //port와 hostname을 매개로 listen -> 들어라!
+}).listen(port, hostname, () => { //port와 hostname을 매개로 listen -> 들어라! // () => 이 코드가 function()와 동일한 코드이다.
  console.log(`Server running at http://${hostname}:${port}/`);
 });
 //Nodejs를 통해서 웹 서버를 만들어서 port를 1337로 hostname을 127.0.0.1로 요청하는 client에게 응답하라는 것이다.
