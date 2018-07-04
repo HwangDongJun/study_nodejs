@@ -1,4 +1,4 @@
-해당하는 파일은 cmd에서 npm install underscore를 통해서 모듈을 설치한 결과이다.
+해당하는 파일(node_modules)은 cmd에서 npm install underscore를 통해서 모듈을 설치한 결과이다.
 이렇게 설치를 하는 것은 의존성이 결핍이 되어있다.
 
 npm install underscore --save를 통해서 의존성을 붙일 수 있는데, 결과로 package-lock.json파일이 생성이 되었고,
