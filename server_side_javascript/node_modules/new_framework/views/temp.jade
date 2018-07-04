@@ -1,0 +1,12 @@
+html
+  head
+    title= _title
+  body
+    h1 Hello jade
+    ul
+      -for(var i = 0; i < 5; i++) //해당하는 코드는 javascript코드이기때문에 -를 앞에다가 추가를 한다.
+          li coding <!-- li태그로 내용이 coding인 것을 5번 반복한다. -->
+
+    div= time
+    <!-- 해당하는 방법은 div태그에 현재시간을 표시하고 싶은 것이다. time는 변수에 해당한다. -->
+    <!-- 변수는 jade파일에서 직접적으로 정할 수 없고, jade를 사용하는 express파일에서 정의를 할 수 있다. 변수 사용시 = 를 붙이는 것을 기억하자.-->
