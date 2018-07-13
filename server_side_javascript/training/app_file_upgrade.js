@@ -53,7 +53,7 @@ app.post('/topic', function(req, res) {
       //send의 특성상 return처럼 출력을 하고 바로 끝낸다.
     }
     //res.send('Success!'); 그냥 출력문이 아닌 페이지 이동을 할 수 있게 진행한다.
-    res.redirect('/tipic/' + title); //해당 주소로 이동한다.
+    res.redirect('/topic/' + title); //해당 주소로 이동한다.
   });
 }) //res.render('new')로 인해 jade파일로 이동을하여 입력된 내용값은 form태그로 인해 post로 전달을 하게 되면서 해당하는 정보를 fs.writeFile을 통해 저장을 하게 된다.
 
