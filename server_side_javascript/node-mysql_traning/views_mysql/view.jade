@@ -18,5 +18,8 @@ html
       else
         h2 Welcome
         | This is server side javascript tutorial.
-    d
-      a(href='/topic/new') new
+    ul
+      li
+        a(href='/topic/add') add
+      if topicid
+        a(href='/topic/' + topicid.id + '/edit') edit

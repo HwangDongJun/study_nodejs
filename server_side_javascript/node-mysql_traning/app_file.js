@@ -19,14 +19,54 @@ app.locals.pretty = true;
 app.set('views', './views_mysql');
 app.set('view engine', 'jade'); //jade라는 template을 사용하겠다는 의미
 
-app.get('/topic/new', function(req, res) {
-  fs.readdir('data', function(err, files) { //이부분 구성 중요하다.
+app.get('/topic/add', function(req, res) {
+  var sql = 'SELECT id,title FROM topic';
+
+  con.query(sql, function(err, topics, fields) {
     if(err) {
       res.status(500).send('Internal Server Error');
+    } else {
+      res.render('add', {topics:topics});s
     }
-    res.render('new_upgrade', {topics:files});
-  }); //기존의 new.jade가 아닌 new_upgrade.jade파일은 내용이 바뀌었기 때문에 해당 코드도 수정을 한다.
+  });
+});
+
+app.post('/topic/add', function(req, res) { // /topic/add로 전송된 post방식 데이터를 받을 수 있다.
+  var title = req.body.title;
+  var description = req.body.description;
+  var authorid = req.body.author_id;
+
+  var sql = 'INSERT INTO topic (title, description, author_id) VALUES(?, ?, ?)';
+  con.query(sql, [title, description, authorid], function(err, topics, fields) {
+    if(err) {
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.redirect('/topic/' + topics.insertId); //res.send(topics)로 확인이 가능하다. insertId가 얻어온 정보의 id에 해당한다.
+    }
+  });
 })
+
+app.get(['/topic/:id/edit'], function(req, res) { //[]를 사용함을써 복수의 주소를 지정가능하다.
+  var sql = 'SELECT id,title FROM topic';
+
+  con.query(sql, function(err, topics, fields) {
+    var id = req.params.id; //url에서 직접적으로 id부분을 접근하게 된다.
+    if(id) {
+      var sql = 'SELECT * FROM topic WHERE id=?';
+      con.query(sql, [id], function(err, topicid, fields) { //[id]는 자동으로 배열에 들어간다.
+        if(err) {
+          console.log(err);
+          res.status(500).send('Internal Server Error');
+        } else {
+          res.render('edit', {topics:topics, topicid:topicid[0]});
+        }
+      });
+    } else { //id값이 없을 시 err를 출력
+      console.log('There is no id.');
+      res.status(500).send('Internal Server Error');
+    }
+  });
+});
 
 app.get(['/topic', '/topic/:id'], function(req, res) { //[]를 사용함을써 복수의 주소를 지정가능하다.
   var sql = 'SELECT id,title FROM topic';
@@ -48,19 +88,6 @@ app.get(['/topic', '/topic/:id'], function(req, res) { //[]를 사용함을써 �
     }
   });
 });
-
-app.post('/topic', function(req, res) {
-  var title = req.body.title;
-  var description = req.body.description;
-  fs.writeFile('data/' + title, description, function(err) { //file에 쓰게되며, 제목은 title을 사용하고 내용은 description을 사용한다.
-    if(err) {
-      res.status(500).send('Internal Server Error'); //상태가 500일 경우는 서버문제이므로, 해당하는 문장을 출력한다.
-      //send의 특성상 return처럼 출력을 하고 바로 끝낸다.
-    }
-    //res.send('Success!'); 그냥 출력문이 아닌 페이지 이동을 할 수 있게 진행한다.
-    res.redirect('/tipic/' + title); //해당 주소로 이동한다.
-  });
-}) //res.render('new')로 인해 jade파일로 이동을하여 입력된 내용값은 form태그로 인해 post로 전달을 하게 되면서 해당하는 정보를 fs.writeFile을 통해 저장을 하게 된다.
 
 app.listen(2001, function() {
   console.log('Connected, 2001 port!');
