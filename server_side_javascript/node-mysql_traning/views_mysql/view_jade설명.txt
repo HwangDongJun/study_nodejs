@@ -1,0 +1,4 @@
+topics배열안의 값을 topic에 하나씩 넣는다. 반복문(for문)/ -for(~)이 방법도 가능
+a(href='/topic/' + topic)=topic 여기서 topic의 값을 출력하기 위해서는 =가 필요하다. 반드시 )에 붙어있어야 한다.
+만약 a(~) = topic라면 =topic라는 결과가 나온다. a(~)= topic이어야 한다.
+그냥 사용하는 방법은 = topic이다.
