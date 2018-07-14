@@ -87,6 +87,8 @@ app.post('/topic/:id/edit', function(req, res) {
   });
 });
 //------------수정(UPDATE)---------------------------------------------------------------------
+//수정이나 삭제나 전체적인 동작은 app.get으로 jade파일로 SELECT한 데이터베이스 정보를 넘겨주고, jade파일에서는 다시 post로 주는걸
+//app.post로 받는 과정이다. 교육목적상 데이터베이스의 목차를 계속 유지해야 했기에 topics를 중복으로 사용했습니다.
 //------------삭제(DELETE)---------------------------------------------------------------------
 app.get(['/topic/:id/delete'], function(req, res) {
   var sql = 'SELECT id,title FROM topic'; //이거 왜 쓸까? => topics를 delete.jade에서 사용을하며 정보를 넘겨줘야 하기에.
@@ -101,7 +103,6 @@ app.get(['/topic/:id/delete'], function(req, res) {
       } else {
         if(topic.length == 0) { //실제로 그 정보가 존재하는지 안하는지 검사
           console.log('There is no record.');
-          res.status(500).send('Internal Server Error');
         } else {
           res.render('delete', {topics:topics, topic:topic[0]});
         }
