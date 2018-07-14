@@ -22,4 +22,7 @@ html
       li
         a(href='/topic/add') add
       if topicid
-        a(href='/topic/' + topicid.id + '/edit') edit
+        li
+          a(href='/topic/' + topicid.id + '/edit') edit
+        li
+          a(href='/topic/' + topicid.id + '/delete') delete

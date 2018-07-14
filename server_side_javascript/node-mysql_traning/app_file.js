@@ -26,7 +26,7 @@ app.get('/topic/add', function(req, res) {
     if(err) {
       res.status(500).send('Internal Server Error');
     } else {
-      res.render('add', {topics:topics});s
+      res.render('add', {topics:topics});
     }
   });
 });
@@ -34,18 +34,20 @@ app.get('/topic/add', function(req, res) {
 app.post('/topic/add', function(req, res) { // /topic/add로 전송된 post방식 데이터를 받을 수 있다.
   var title = req.body.title;
   var description = req.body.description;
+  var created = req.body.created;
   var authorid = req.body.author_id;
 
-  var sql = 'INSERT INTO topic (title, description, author_id) VALUES(?, ?, ?)';
-  con.query(sql, [title, description, authorid], function(err, topics, fields) {
+  var sql = 'INSERT INTO topic (title, description, created, author_id) VALUES(?, ?, ?, ?)';
+  con.query(sql, [title, description, created, authorid], function(err, topics, fields) {
     if(err) {
+      console.log(err);
       res.status(500).send('Internal Server Error');
     } else {
       res.redirect('/topic/' + topics.insertId); //res.send(topics)로 확인이 가능하다. insertId가 얻어온 정보의 id에 해당한다.
     }
   });
 })
-
+//------------수정(UPDATE)---------------------------------------------------------------------
 app.get(['/topic/:id/edit'], function(req, res) { //[]를 사용함을써 복수의 주소를 지정가능하다.
   var sql = 'SELECT id,title FROM topic';
 
@@ -68,6 +70,60 @@ app.get(['/topic/:id/edit'], function(req, res) { //[]를 사용함을써 복수
   });
 });
 
+app.post('/topic/:id/edit', function(req, res) {
+  var title = req.body.title;
+  var description = req.body.description;
+  var authorid = req.body.author_id;
+  var id = req.params.id;
+  var sql = 'UPDATE topic SET title=?, description=?, author_id=? WHERE id=?';
+
+  con.query(sql, [title, description, authorid, id], function(err, result, fields) {
+    if(err) {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.redirect('/topic/' + id);
+    }
+  });
+});
+//------------수정(UPDATE)---------------------------------------------------------------------
+//------------삭제(DELETE)---------------------------------------------------------------------
+app.get(['/topic/:id/delete'], function(req, res) {
+  var sql = 'SELECT id,title FROM topic'; //이거 왜 쓸까? => topics를 delete.jade에서 사용을하며 정보를 넘겨줘야 하기에.
+  var id = req.params.id;
+
+  con.query(sql, function(err, topics, fields) {
+    var sql = 'SELECT * FROM topic WHERE id=?';
+    con.query(sql, [id], function(err, topic, fields) {
+      if(err) {
+        console.log(err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        if(topic.length == 0) { //실제로 그 정보가 존재하는지 안하는지 검사
+          console.log('There is no record.');
+          res.status(500).send('Internal Server Error');
+        } else {
+          res.render('delete', {topics:topics, topic:topic[0]});
+        }
+      }
+    });
+  });
+});
+
+app.post('/topic/:id/delete', function(req, res) {
+  var id = req.params.id;
+  var sql = 'DELETE FROM topic WHERE id=?';
+
+  con.query(sql, [id], function(err, result, fields) {
+    if(err) {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.redirect('/topic/');
+    }
+  });
+});
+//------------삭제(DELETE)---------------------------------------------------------------------
 app.get(['/topic', '/topic/:id'], function(req, res) { //[]를 사용함을써 복수의 주소를 지정가능하다.
   var sql = 'SELECT id,title FROM topic';
 
@@ -80,7 +136,7 @@ app.get(['/topic', '/topic/:id'], function(req, res) { //[]를 사용함을써 �
           console.log(err);
           res.status(500).send('Internal Server Error');
         } else {
-          res.render('view', {topics:topics, topicid:topicid[0]});
+          res.render('view', {topics:topics, topicid:topicid[0]}); //topicid자체는 배열이기에 0으로 접근
         }
       });
     } else {
